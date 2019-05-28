@@ -30,7 +30,7 @@ X_d=pd.DataFrame(X)
 y=df[['Class','Mean_speed_kmph']].values
 y_d=pd.DataFrame(y)
 
-X_train, X_test, y_train, y_test_k = train_test_split(X_d,y_d,test_size=0.1,random_state=42)
+X_train, X_test, y_train, y_test_k = train_test_split(X_d,y_d,test_size=0.01,random_state=42)
 new_y_2=y_train[0].copy()
 new_y_d_2=pd.DataFrame(new_y_2)
 new_y=y_test_k[0].copy()
@@ -212,25 +212,32 @@ def sendResponse(responseObj):
 
 @app.route("/predict", methods=["GET"])
 def predict():
-
+    count=0
     parameters = getParameters()
+    for x in parameters:
+        if count==0 or count==1 or count==4:
+            parameters[count]=float(x)
+        else:
+            parameters[count]=float(x)
+            #parameters[count]=float(parameters[count])
+        count=count+1
     inputFeature = np.asarray(parameters).reshape(1,5)
     with graph.as_default():
+        print(inputFeature)
         raw_prediction = model.predict(inputFeature)
     print(raw_prediction)
-
    # k_1=round(raw_prediction[0])
-    k_1_i=int(raw_prediction[0][0])
+    k_1=round(raw_prediction[0][0])
+    k_1_i=int(k_1)
         #k_1_s=str(k_1_i)
-    #k_2=round(raw_prediction[1])
-    k_2_i=int(raw_prediction[0][1])
+    k_2=round(raw_prediction[0][1])
+    k_2_i=int(k_2)
         #k_2_s=str(k_2_i)
-    #k_3=round(raw_prediction[2])
-    k_3_i=int(raw_prediction[0][2])
+    k_3=round(raw_prediction[0][2])
+    k_3_i=int(k_3)
         #k_3_s=str(k_3_i)
-   # k_4=round(raw_prediction[3])
-    k_4_i=int(raw_prediction[0][3])
-        #k_4_s=str(k_4_i)
+    k_4=round(raw_prediction[0][3])
+    k_4_i=int(k_4)
 
     if k_1_i==0 and k_2_i==0 and k_3_i==0 and k_4_i==0:
         prediction='Bad Data'
